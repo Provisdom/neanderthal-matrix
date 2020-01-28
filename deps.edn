@@ -19,4 +19,5 @@
                                                                    :sha     "cb96e80f6f3d3b307c59cbeb49bb0dcb3a2a780b"}}}
            :test-runner {:extra-deps {lambdaisland/kaocha           {:mvn/version "0.0-554"}
                                       lambdaisland/kaocha-junit-xml {:mvn/version "0.0-70"}}
+                         :jvm-opts   ["--add-opens=java.base/jdk.internal.ref=ALL-UNNAMED"]
                          :main-opts  ["-m" "kaocha.runner"]}}}

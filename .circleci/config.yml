@@ -2,7 +2,7 @@ version: 2.1
 
 defaults: &defaults
   docker:
-    - image: computesoftware/java-neanderthal:c7fb0781c306c1af91545165411f0535d870cc3c-tools-deps
+    - image: computesoftware/java-neanderthal:a2c9cb308bb0f5f63746d89c1185b1522e6197b0-tools-deps
 
 orbs:
   cache: compute/cache@0.0.3
@@ -13,7 +13,7 @@ jobs:
 
     steps:
       - checkout
-      - run: clojure -J-Xmx3500m -A:test
+      - run: clojure -J-Xmx3500m -A:test:test-runner
 
 workflows:
   version: 2
