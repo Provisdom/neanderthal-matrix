@@ -1,4 +1,4 @@
-(ns provisdom.neanderthal-matrix.neanderthal-matrix
+(ns provisdom.neanderthal-matrix
   (:require
     [clojure.spec.alpha :as s]
     [clojure.spec.gen.alpha :as gen]
@@ -23,8 +23,8 @@
   (neanderthal/matrix? x))
 
 (s/fdef neanderthal-matrix?
-        :args (s/cat :x any?)
-        :ret boolean?)
+  :args (s/cat :x any?)
+  :ret boolean?)
 
 (s/def ::neanderthal-matrix
   (s/with-gen
@@ -37,8 +37,8 @@
   (and (neanderthal-matrix? x) (zero? (columns x))))
 
 (s/fdef empty-neanderthal-matrix?
-        :args (s/cat :x any?)
-        :ret boolean?)
+  :args (s/cat :x any?)
+  :ret boolean?)
 
 (s/def ::empty-neanderthal-matrix
   (s/with-gen
@@ -168,10 +168,10 @@
                            ::anomalies/fn       (var lls)})))
 
 (s/fdef lls
-        :args (s/cat :a ::neanderthal-matrix
-                     :b ::neanderthal-matrix)
-        :ret (s/or :anomaly ::anomalies/anomaly
-                   :sol ::solution))
+  :args (s/cat :a ::neanderthal-matrix
+               :b ::neanderthal-matrix)
+  :ret (s/or :anomaly ::anomalies/anomaly
+             :sol ::solution))
 
 (defn lls!
   "Linear Linear Squares, solving for 'x', where `a` × x = `b`.  After
@@ -193,10 +193,10 @@
                            ::anomalies/fn       (var lls!)})))
 
 (s/fdef lls!
-        :args (s/cat :a ::neanderthal-matrix
-                     :b ::neanderthal-matrix)
-        :ret (s/or :anomaly ::anomalies/anomaly
-                   :sol ::solution))
+  :args (s/cat :a ::neanderthal-matrix
+               :b ::neanderthal-matrix)
+  :ret (s/or :anomaly ::anomalies/anomaly
+             :sol ::solution))
 
 (s/def ::condition-number ::m/non-)
 (s/def ::projection ::neanderthal-matrix)
@@ -243,15 +243,15 @@
                            ::anomalies/fn       (var lls-with-error)})))
 
 (s/fdef lls-with-error
-        :args (s/cat :a ::neanderthal-matrix
-                     :b ::neanderthal-matrix)
-        :ret (s/or :anomaly ::anomalies/anomaly
-                   :sol (s/keys :req [::condition-number
-                                      ::solution
-                                      ::projection
-                                      ::annihilator
-                                      ::mean-squared-errors
-                                      ::standard-squared-errors])))
+  :args (s/cat :a ::neanderthal-matrix
+               :b ::neanderthal-matrix)
+  :ret (s/or :anomaly ::anomalies/anomaly
+             :sol (s/keys :req [::condition-number
+                                ::solution
+                                ::projection
+                                ::annihilator
+                                ::mean-squared-errors
+                                ::standard-squared-errors])))
 
 (s/def ::svd-left ::neanderthal-matrix)
 (s/def ::svd-right ::neanderthal-matrix)
