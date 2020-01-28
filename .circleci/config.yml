@@ -2,7 +2,7 @@ version: 2.1
 
 defaults: &defaults
   docker:
-    - image: computesoftware/java-neanderthal:a2c9cb308bb0f5f63746d89c1185b1522e6197b0-tools-deps
+    - image: computesoftware/adoptopenjdk-11:intel-mkl-2018.4-057-tools-deps-1.10.1.496
 
 orbs:
   cache: compute/cache@0.0.3
