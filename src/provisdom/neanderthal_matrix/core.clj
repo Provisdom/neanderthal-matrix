@@ -208,7 +208,7 @@
   "Linear Least Squares, solving for 'x', where `a` × x = `b`.  Uses QR Decomp.
    Returns map of solution, condition-number (of R), projection matrix,
    annihilator matrix, mean-squared-errors (maximum likelihood errors), and
-   standard-squared-errors (unbiased).
+   standard-squared-errors (unbiased and larger than MSE).
   See https://en.wikipedia.org/wiki/Ordinary_least_squares."
   [a b]
   (try (let [qr (linear-algebra/qrf a)
