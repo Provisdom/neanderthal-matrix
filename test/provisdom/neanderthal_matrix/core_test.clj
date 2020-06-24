@@ -1,4 +1,4 @@
-(ns provisdom.neanderthal-matrix-test
+(ns provisdom.neanderthal-matrix.core-test
   (:require
     [clojure.test :refer :all]
     [clojure.spec.test.alpha :as st]
@@ -6,17 +6,17 @@
     [criterium.core :as criterium]
     [provisdom.test.core :refer :all]
     [provisdom.math.core :as m]
-    [provisdom.neanderthal-matrix :as neanderthal-mx]))
+    [provisdom.neanderthal-matrix.core :as core]))
 
 ;? seconds
 
 (set! *warn-on-reflection* true)
 
 (deftest lls-with-error-test
-  (with-instrument [`neanderthal-mx/lls-with-error]
-    (is (spec-check neanderthal-mx/lls-with-error))
+  (with-instrument [`core/lls-with-error]
+    (is (spec-check core/lls-with-error))
     (is (data-approx=
-          #::neanderthal-mx
+          #::core
               {:standard-squared-errors [[3.3684210526315392]]
                :mean-squared-errors     [[1.6842105263157696]]
                :condition-number        6.499276998540634
@@ -40,14 +40,14 @@
           (apply hash-map
                  (mapcat
                    (fn [[k v]]
-                     (let [m (if (neanderthal-mx/neanderthal-matrix? v)
-                               (neanderthal-mx/neanderthal-matrix->matrix v)
+                     (let [m (if (core/neanderthal-matrix? v)
+                               (core/neanderthal-matrix->matrix v)
                                v)]
                        [k m]))
-                   (neanderthal-mx/lls-with-error
-                     (neanderthal-mx/matrix->neanderthal-matrix
+                   (core/lls-with-error
+                     (core/matrix->neanderthal-matrix
                        [[1.0 2.0] [3.0 2.0] [6.0 2.0] [5.0 3.0]])
-                     (neanderthal-mx/matrix->neanderthal-matrix
+                     (core/matrix->neanderthal-matrix
                        [[5.0] [7.0] [2.0] [7.0]]))))))))
 
 #_(ost/unstrument)
