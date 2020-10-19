@@ -4,7 +4,7 @@
                                      :sha     "9e91b311d1024628ef882290d93eff1b886b7eeb"}
            provisdom/math           {:git/url "https://github.com/Provisdom/math.git"
                                      :sha     "289ce7bfa71552998d025824e4e994ee2541955b"}
-           uncomplicate/neanderthal {:mvn/version "0.35.0"
+           uncomplicate/neanderthal {:mvn/version "0.38.0"
                                      :exclusions  [org.jcuda/jcuda-natives org.jcuda/jcublas-natives]}
            uncomplicate/fluokitten  {:mvn/version "0.9.1"}}
  :aliases {:dev         {:extra-paths ["siderail"]}
