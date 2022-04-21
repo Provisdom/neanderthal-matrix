@@ -2,7 +2,7 @@ version: 2.1
 
 defaults: &defaults
   docker:
-    - image: computesoftware/adoptopenjdk-11:intel-mkl-2018.4-057-tools-deps-1.10.1.502
+    - image: computesoftware/zulu-openjdk-11:dev-utils-intel-mkl-2018.4-057-tools-deps-1.11.1.1105-b2287c8
 
 orbs:
   cache: compute/cache@0.0.3
@@ -15,7 +15,7 @@ jobs:
       - checkout
       - run:
           name: Run tests
-          command: clojure -J-Xmx3500m -A:test:test-runner --reporter kaocha.report/documentation --plugin profiling
+          command: clojure -J-Xmx3500m -M:test:test-runner --reporter kaocha.report/documentation --plugin profiling
 
 workflows:
   version: 2

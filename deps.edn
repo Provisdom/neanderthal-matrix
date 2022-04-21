@@ -1,23 +1,23 @@
 {:paths   ["src"]
- :deps    {orchestra/orchestra      {:mvn/version "2020.09.18-1"}
+ :deps    {orchestra/orchestra      {:mvn/version "2021.01.01-1"}
            provisdom/utility-belt   {:git/url "https://github.com/Provisdom/utility-belt.git"
-                                     :sha     "9e91b311d1024628ef882290d93eff1b886b7eeb"}
+                                     :sha     "9e2e816051d400e1eb6e5205414021dbfaed4b6b"}
            provisdom/math           {:git/url "https://github.com/Provisdom/math.git"
-                                     :sha     "289ce7bfa71552998d025824e4e994ee2541955b"}
-           uncomplicate/neanderthal {:mvn/version "0.38.0"
+                                     :sha     "8ab70786520655320e1c079f1d74c55b377ea5d2"}
+           uncomplicate/neanderthal {:mvn/version "0.43.3"
                                      :exclusions  [org.jcuda/jcuda-natives org.jcuda/jcublas-natives]}
            uncomplicate/fluokitten  {:mvn/version "0.9.1"}}
  :aliases {:dev         {:extra-paths ["siderail"]}
            :test        {:extra-paths ["test" "siderail"]
                          :extra-deps  {criterium/criterium        {:mvn/version "0.4.6"}
-                                       org.slf4j/slf4j-nop        {:mvn/version "1.7.30"}
-                                       org.clojure/test.check     {:mvn/version "1.1.0"}
+                                       org.slf4j/slf4j-nop        {:mvn/version "1.7.36"}
+                                       org.clojure/test.check     {:mvn/version "1.1.1"}
                                        provisdom/test             {:git/url "https://github.com/Provisdom/test.git"
-                                                                   :sha     "e34b8d22f14401c5dca6e213b981a244865cc9fd"}
+                                                                   :sha     "c12852d4dbe90ed5a6a8675618cfbf49eed60970"}
                                        com.cognitect/transcriptor {:mvn/version "0.1.5"}
                                        com.cognitect/test-runner  {:git/url "https://github.com/cognitect-labs/test-runner.git"
-                                                                   :sha     "b6b3193fcc42659d7e46ecd1884a228993441182"}}}
-           :test-runner {:extra-deps {lambdaisland/kaocha           {:mvn/version "1.0.700"}
+                                                                   :sha     "cc75980b43011773162b485f46f939dc5fba91e4"}}}
+           :test-runner {:extra-deps {lambdaisland/kaocha           {:mvn/version "1.65.1029"}
                                       lambdaisland/kaocha-junit-xml {:mvn/version "0.0.76"}}
                          :jvm-opts   ["--add-opens=java.base/jdk.internal.ref=ALL-UNNAMED"]
                          :main-opts  ["-m" "kaocha.runner"]}}}
