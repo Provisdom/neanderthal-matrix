@@ -2,11 +2,9 @@
   (:require
     [clojure.spec.alpha :as s]
     [clojure.spec.gen.alpha :as gen]
-    [clojure.spec.test.alpha :as st]
-    [orchestra.spec.test :as ost]
-    [provisdom.utility-belt.anomalies :as anomalies]
     [provisdom.math.core :as m]
     [provisdom.math.matrix :as mx]
+    [provisdom.utility-belt.anomalies :as anomalies]
     [uncomplicate.fluokitten.core :as fluokitten]
     [uncomplicate.neanderthal.core :as neanderthal]
     [uncomplicate.neanderthal.linalg :as linear-algebra]
@@ -129,7 +127,8 @@
   "Lower * Upper = `neanderthal-mx`, using the symmetric view of a Neanderthal
   matrix."
   [neanderthal-mx]
-  (try (let [a-sy (neanderthal/view-sy (neanderthal/copy neanderthal-mx) {:uplo :lower})
+  (try (let [a-sy (neanderthal/view-sy (neanderthal/copy neanderthal-mx)
+                    {:uplo :lower})
              lower-tr (neanderthal/view-tr (:lu (linear-algebra/ptrf! a-sy)))]
          (native/dge lower-tr))
        (catch Exception _ {::anomalies/category ::anomalies/no-solve
@@ -150,7 +149,7 @@
 (s/def ::solution ::neanderthal-matrix)
 
 (defn lls
-  "Linear Linear Squares, solving for 'x', where `a` × x = `b`.  Returns
+  "Linear Least Squares, solving for 'x', where `a` × x = `b`.  Returns
   solution."
   [a b]
   (try (let [cols (columns a)
@@ -174,7 +173,7 @@
              :sol ::solution))
 
 (defn lls!
-  "Linear Linear Squares, solving for 'x', where `a` × x = `b`.  After
+  "Linear Least Squares, solving for 'x', where `a` × x = `b`.  After
   destruction, `a` will contain factorization data, and `b` will contain
   solution.  Also returns solution."
   [a b]
@@ -225,7 +224,8 @@
              p (columns a)
              sum-squared-errors (mx* (transpose b) annihilator b)
              mean-squared-errors (neanderthal/scal (/ 1.0 n) sum-squared-errors)
-             standard-squared-errors (neanderthal/scal (/ n (- n p)) mean-squared-errors)]
+             standard-squared-errors (neanderthal/scal (/ n (- n p))
+                                       mean-squared-errors)]
          (if (every? #(< % 1e15)
                      (flatten (neanderthal-matrix->matrix solution)))
            {::solution                solution

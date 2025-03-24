@@ -1,23 +1,26 @@
 {:paths   ["src"]
- :deps    {orchestra                {:mvn/version "2020.09.18-1"}
-           provisdom/utility-belt   {:git/url "https://github.com/Provisdom/utility-belt.git"
-                                     :sha     "9e91b311d1024628ef882290d93eff1b886b7eeb"}
-           provisdom/math           {:git/url "https://github.com/Provisdom/math.git"
-                                     :sha     "289ce7bfa71552998d025824e4e994ee2541955b"}
-           uncomplicate/neanderthal {:mvn/version "0.38.0"
-                                     :exclusions  [org.jcuda/jcuda-natives org.jcuda/jcublas-natives]}
-           uncomplicate/fluokitten  {:mvn/version "0.9.1"}}
+ :deps    {#_#_provisdom/math {:git/url "https://github.com/Provisdom/math.git"
+                               :sha     "8ab70786520655320e1c079f1d74c55b377ea5d2"}
+           provisdom/math           {:local/root "../math"}
+           #_#_provisdom/utility-belt {:git/url "https://github.com/Provisdom/utility-belt.git"
+                                       :sha     "37a762091912860b3954f95de7aaebbd5c930a5a"}
+           provisdom/utility-belt   {:local/root "../utility-belt"}
+           uncomplicate/fluokitten  {:mvn/version "0.9.1"}
+           uncomplicate/neanderthal {:mvn/version "0.46.0"
+                                     :exclusions  [org.jcuda/jcuda-natives org.jcuda/jcublas-natives]}}
  :aliases {:dev         {:extra-paths ["siderail"]}
            :test        {:extra-paths ["test" "siderail"]
-                         :extra-deps  {criterium                  {:mvn/version "0.4.6"}
-                                       org.slf4j/slf4j-nop        {:mvn/version "1.7.30"}
-                                       org.clojure/test.check     {:mvn/version "1.1.0"}
-                                       provisdom/test             {:git/url "https://github.com/Provisdom/test.git"
-                                                                   :sha     "e34b8d22f14401c5dca6e213b981a244865cc9fd"}
-                                       com.cognitect/transcriptor {:mvn/version "0.1.5"}
+                         :extra-deps  {com.cognitect/transcriptor {:mvn/version "0.1.5"}
                                        com.cognitect/test-runner  {:git/url "https://github.com/cognitect-labs/test-runner.git"
-                                                                   :sha     "b6b3193fcc42659d7e46ecd1884a228993441182"}}}
-           :test-runner {:extra-deps {lambdaisland/kaocha           {:mvn/version "1.0.700"}
-                                      lambdaisland/kaocha-junit-xml {:mvn/version "0.0.76"}}
+                                                                   :sha     "7284cda41fb9edc0f3bc6b6185cfb7138fc8a023"}
+                                       criterium/criterium        {:mvn/version "0.4.6"}
+                                       orchestra/orchestra      {:mvn/version "2021.01.01-1"}
+                                       org.clojure/test.check     {:mvn/version "1.1.1"}
+                                       org.slf4j/slf4j-nop        {:mvn/version "2.0.9"}
+                                       #_#_provisdom/test {:git/url "https://github.com/Provisdom/test.git"
+                                                           :sha     "e34b8d22f14401c5dca6e213b981a244865cc9fd"}
+                                       provisdom/test             {:local/root "../test"}}}
+           :test-runner {:extra-deps {lambdaisland/kaocha           {:mvn/version "1.87.1366"}
+                                      lambdaisland/kaocha-junit-xml {:mvn/version "1.17.101"}}
                          :jvm-opts   ["--add-opens=java.base/jdk.internal.ref=ALL-UNNAMED"]
                          :main-opts  ["-m" "kaocha.runner"]}}}
