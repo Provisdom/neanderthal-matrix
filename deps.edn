@@ -1,19 +1,21 @@
 {:paths   ["src"]
- :deps    {provisdom/utility-belt   {:git/url "https://github.com/Provisdom/utility-belt.git"
-                                     :sha     "efdbcff8a2f15fe20d5b969655f19fbf7f42b680"}
-           provisdom/math           {:git/url "https://github.com/Provisdom/math.git"
+ :deps    {provisdom/math           {:git/url "https://github.com/Provisdom/math.git"
                                      :sha     "564f208441cd4cc4536ae69dbc4872040af05a2e"}
+           provisdom/utility-belt   {:git/url "https://github.com/Provisdom/utility-belt.git"
+                                     :sha     "efdbcff8a2f15fe20d5b969655f19fbf7f42b680"}
+           uncomplicate/fluokitten  {:mvn/version "0.10.0"}
            uncomplicate/neanderthal {:mvn/version "0.46.0"
-                                     :exclusions  [org.jcuda/jcuda-natives org.jcuda/jcublas-natives]}
-           uncomplicate/fluokitten  {:mvn/version "0.10.0"}}
+                                     :exclusions  [org.jcuda/jcuda-natives org.jcuda/jcublas-natives]}}
  :aliases {:dev         {:extra-paths ["siderail"]}
+           :local       {:override-deps {provisdom/math          {:local/root "../math"}
+                                         provisdom/utility-belt  {:local/root "../utility-belt"}}}
            :test        {:extra-paths ["test" "siderail"]
-                         :extra-deps  {criterium/criterium        {:mvn/version "0.4.6"}
+                         :extra-deps  {com.cognitect/transcriptor {:mvn/version "0.1.5"}
+                                       criterium/criterium        {:mvn/version "0.4.6"}
                                        org.slf4j/slf4j-nop        {:mvn/version "2.0.17"}
                                        org.clojure/test.check     {:mvn/version "1.1.1"}
                                        provisdom/test             {:git/url "https://github.com/Provisdom/test.git"
-                                                                   :sha     "ec0b531bf0e5a8b5897a8dde332bd08d478578f4"}
-                                       com.cognitect/transcriptor {:mvn/version "0.1.5"}}}
+                                                                   :sha     "ec0b531bf0e5a8b5897a8dde332bd08d478578f4"}}}
            :test-runner {:extra-deps {lambdaisland/kaocha           {:mvn/version "1.91.1392"}
                                       lambdaisland/kaocha-junit-xml {:mvn/version "1.17.101"}}
                          :jvm-opts   ["--add-opens=java.base/jdk.internal.ref=ALL-UNNAMED"]
