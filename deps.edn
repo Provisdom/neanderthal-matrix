@@ -4,7 +4,8 @@
              provisdom/utility-belt   {:git/url "https://github.com/Provisdom/utility-belt.git"
                                        :sha     "2c240502ac30d6d240937984b38de170c94ce497"}
              uncomplicate/fluokitten  {:mvn/version "0.10.0"}
-             uncomplicate/neanderthal {:mvn/version "0.53.2"}}
+             uncomplicate/neanderthal {:mvn/version "0.53.2"}
+             org.bytedeco/openblas    {:mvn/version "0.3.29-1.5.12-SNAPSHOT"}}
  ;; We need this for pinned openblas snapshot! If you're just using MKL (recommended on Linux and Windows) you don't need this.
  ;; https://github.com/uncomplicate/neanderthal/blob/d4aeca44482a1350df45c4973e5c173982cf2de2/examples/hello-world/hello-world-apple/project.clj
  :mvn/repos {"sonatype-snapshots" {:url "https://oss.sonatype.org/content/repositories/snapshots"}}
