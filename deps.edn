@@ -1,22 +1,22 @@
 {:paths     ["src"]
- :deps      {provisdom/math           {:git/url "https://github.com/Provisdom/math.git"
+ :deps      {org.bytedeco/openblas    {:mvn/version "0.3.29-1.5.12-SNAPSHOT"}
+             provisdom/math           {:git/url "https://github.com/Provisdom/math.git"
                                        :sha     "702e20c6724accf2d9080ca0e1588ac9f653814e"}
              provisdom/utility-belt   {:git/url "https://github.com/Provisdom/utility-belt.git"
                                        :sha     "a192a865a38322d5c7e5f6109d2e0ed4e525fc13"}
              uncomplicate/fluokitten  {:mvn/version "0.10.0"}
-             uncomplicate/neanderthal {:mvn/version "0.53.2"}
-             org.bytedeco/openblas    {:mvn/version "0.3.29-1.5.12-SNAPSHOT"}}
+             uncomplicate/neanderthal {:mvn/version "0.53.2"}}
  ;; We need this for pinned openblas snapshot! If you're just using MKL (recommended on Linux and Windows) you don't need this.
  ;; https://github.com/uncomplicate/neanderthal/blob/d4aeca44482a1350df45c4973e5c173982cf2de2/examples/hello-world/hello-world-apple/project.clj
  :mvn/repos {"sonatype-snapshots" {:url "https://oss.sonatype.org/content/repositories/snapshots"}}
  :aliases   {:dev             {:extra-paths ["siderail"]
                                ;; We need direct linking for properly resolving types in heavy macros and avoiding reflection warnings!
                                :jvm-opts    ["-Dclojure.compiler.direct-linking=true"]}
-             :mac             {:extra-deps {org.bytedeco/openblas {:mvn/version "0.3.29-1.5.12-SNAPSHOT"}}}
              :linux           {:extra-deps {org.bytedeco/mkl$linux-x86_64-redist  {:mvn/version "2025.0-1.5.11"}
                                             org.bytedeco/cuda$linux-x86_64-redist {:mvn/version "12.6-9.5-1.5.11"}}}
              :local           {:override-deps {provisdom/math         {:local/root "../math"}
                                                provisdom/utility-belt {:local/root "../utility-belt"}}}
+             :mac             {:extra-deps {org.bytedeco/openblas {:mvn/version "0.3.29-1.5.12-SNAPSHOT"}}}
              :test            {:extra-paths ["test" "siderail"]
                                :extra-deps  {com.cognitect/transcriptor {:mvn/version "0.1.5"}
                                              criterium/criterium        {:mvn/version "0.4.6"}
