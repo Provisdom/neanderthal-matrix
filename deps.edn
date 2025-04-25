@@ -13,8 +13,8 @@
                                ;; We need direct linking for properly resolving types in heavy macros and avoiding reflection warnings!
                                :jvm-opts    ["-Dclojure.compiler.direct-linking=true"]}
              :mac             {:extra-deps {org.bytedeco/openblas {:mvn/version "0.3.29-1.5.12-SNAPSHOT"}}}
-             :linux           {:extra-deps {org.bytedeco/mkl  {:mvn/version "2025.0-1.5.11"}
-                                            org.bytedeco/cuda {:mvn/version "12.6-9.5-1.5.11"}}}
+             :linux           {:extra-deps {org.bytedeco/mkl$linux-x86_64-redist  {:mvn/version "2025.0-1.5.11"}
+                                            org.bytedeco/cuda$linux-x86_64-redist {:mvn/version "12.6-9.5-1.5.11"}}}
              :local           {:override-deps {provisdom/math         {:local/root "../math"}
                                                provisdom/utility-belt {:local/root "../utility-belt"}}}
              :test            {:extra-paths ["test" "siderail"]
