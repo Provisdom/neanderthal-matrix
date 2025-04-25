@@ -13,7 +13,7 @@
   (with-instrument `neanderthal/lls-with-error
     (is (spec-check neanderthal/lls-with-error)))
   (with-instrument (st/instrumentable-syms)
-    (is=
+    (data-approx=
       #::neanderthal
               {:annihilator
                [[0.37969924812029987 -0.25187969924812054 0.30075187969924816

@@ -8,8 +8,7 @@
     [uncomplicate.fluokitten.core :as fluokitten]
     [uncomplicate.neanderthal.core :as neanderthal]
     [uncomplicate.neanderthal.linalg :as linear-algebra]
-    [uncomplicate.neanderthal.native :as native]
-    [uncomplicate.neanderthal.real :as real]))
+    [uncomplicate.neanderthal.native :as native]))
 
 (declare neanderthal-rows neanderthal-matrix? matrix->neanderthal-matrix
          columns)

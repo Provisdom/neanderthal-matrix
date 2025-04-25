@@ -1,22 +1,31 @@
-{:paths   ["src"]
- :deps    {provisdom/math           {:git/url "https://github.com/Provisdom/math.git"
-                                     :sha     "f8341d8d4c51af865f7cd9390d18f842269b7d82"}
-           provisdom/utility-belt   {:git/url "https://github.com/Provisdom/utility-belt.git"
-                                     :sha     "2c240502ac30d6d240937984b38de170c94ce497"}
-           uncomplicate/fluokitten  {:mvn/version "0.10.0"}
-           uncomplicate/neanderthal {:mvn/version "0.46.0"
-                                     :exclusions  [org.jcuda/jcuda-natives org.jcuda/jcublas-natives]}}
- :aliases {:dev         {:extra-paths ["siderail"]}
-           :local       {:override-deps {provisdom/math          {:local/root "../math"}
-                                         provisdom/utility-belt  {:local/root "../utility-belt"}}}
-           :test        {:extra-paths ["test" "siderail"]
-                         :extra-deps  {com.cognitect/transcriptor {:mvn/version "0.1.5"}
-                                       criterium/criterium        {:mvn/version "0.4.6"}
-                                       org.slf4j/slf4j-nop        {:mvn/version "2.0.17"}
-                                       org.clojure/test.check     {:mvn/version "1.1.1"}
-                                       provisdom/test             {:git/url "https://github.com/Provisdom/test.git"
-                                                                   :sha     "ec0b531bf0e5a8b5897a8dde332bd08d478578f4"}}}
-           :test-runner {:extra-deps {lambdaisland/kaocha           {:mvn/version "1.91.1392"}
-                                      lambdaisland/kaocha-junit-xml {:mvn/version "1.17.101"}}
-                         :jvm-opts   ["--add-opens=java.base/jdk.internal.ref=ALL-UNNAMED"]
-                         :main-opts  ["-m" "kaocha.runner"]}}}
+{:paths     ["src"]
+ :deps      {provisdom/math           {:git/url "https://github.com/Provisdom/math.git"
+                                       :sha     "f8341d8d4c51af865f7cd9390d18f842269b7d82"}
+             provisdom/utility-belt   {:git/url "https://github.com/Provisdom/utility-belt.git"
+                                       :sha     "2c240502ac30d6d240937984b38de170c94ce497"}
+             uncomplicate/fluokitten  {:mvn/version "0.10.0"}
+             uncomplicate/neanderthal {:mvn/version "0.53.2"}
+             org.bytedeco/openblas    {:mvn/version "0.3.29-1.5.12-SNAPSHOT"}}
+ ;; We need this for pinned openblas snapshot! If you're just using MKL (recommended on Linux and Windows) you don't need this.
+ ;; https://github.com/uncomplicate/neanderthal/blob/d4aeca44482a1350df45c4973e5c173982cf2de2/examples/hello-world/hello-world-apple/project.clj
+ :mvn/repos {"sonatype-snapshots" {:url "https://oss.sonatype.org/content/repositories/snapshots"}}
+ :aliases   {:dev             {:extra-paths ["siderail"]
+                               ;; We need direct linking for properly resolving types in heavy macros and avoiding reflection warnings!
+                               :jvm-opts    ["-Dclojure.compiler.direct-linking=true"]}
+             :mac             {:extra-deps {org.bytedeco/openblas {:mvn/version "0.3.29-1.5.12-SNAPSHOT"}}}
+             :linux           {:extra-deps {org.bytedeco/mkl$linux-x86_64-redist  {:mvn/version "2025.0-1.5.11"}
+                                            org.bytedeco/cuda$linux-x86_64-redist {:mvn/version "12.6-9.5-1.5.11"}}}
+             :local           {:override-deps {provisdom/math         {:local/root "../math"}
+                                               provisdom/utility-belt {:local/root "../utility-belt"}}}
+             :test            {:extra-paths ["test" "siderail"]
+                               :extra-deps  {com.cognitect/transcriptor {:mvn/version "0.1.5"}
+                                             criterium/criterium        {:mvn/version "0.4.6"}
+                                             org.slf4j/slf4j-nop        {:mvn/version "2.0.17"}
+                                             org.clojure/test.check     {:mvn/version "1.1.1"}
+                                             provisdom/test             {:git/url "https://github.com/Provisdom/test.git"
+                                                                         :sha     "ec0b531bf0e5a8b5897a8dde332bd08d478578f4"}}}
+             :test-clj-runner {:extra-deps {lambdaisland/kaocha           {:mvn/version "1.91.1392"}
+                                            lambdaisland/kaocha-junit-xml {:mvn/version "1.17.101"}}
+                               :jvm-opts   ["--add-opens=java.base/jdk.internal.ref=ALL-UNNAMED"
+                                            "-Dclojure.compiler.direct-linking=true"]
+                               :main-opts  ["-m" "kaocha.runner"]}}}
