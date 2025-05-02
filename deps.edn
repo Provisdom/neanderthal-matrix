@@ -1,9 +1,9 @@
 {:paths     ["src"]
  :deps      {org.bytedeco/openblas    {:mvn/version "0.3.29-1.5.12-SNAPSHOT"}
-             provisdom/math           {:git/url "https://github.com/Provisdom/math.git"
-                                       :sha     "702e20c6724accf2d9080ca0e1588ac9f653814e"}
-             provisdom/utility-belt   {:git/url "https://github.com/Provisdom/utility-belt.git"
-                                       :sha     "a192a865a38322d5c7e5f6109d2e0ed4e525fc13"}
+             provisdom/math                   {:git/url "https://github.com/Provisdom/math.git"
+                                               :sha     "31fd993e4480fd9b1a2ff447d69110153ce4e91c"}
+             provisdom/utility-belt           {:git/url "https://github.com/Provisdom/utility-belt.git"
+                                               :sha     "30014cb3c7d3fd92cb22f6374ed8ce289c23843c"}
              uncomplicate/fluokitten  {:mvn/version "0.10.0"}
              uncomplicate/neanderthal {:mvn/version "0.53.2"}}
  ;; We need this for pinned openblas snapshot! If you're just using MKL (recommended on Linux and Windows) you don't need this.
