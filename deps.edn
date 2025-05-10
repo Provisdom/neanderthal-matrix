@@ -1,17 +1,17 @@
 {:paths     ["src"]
  :deps      {org.bytedeco/openblas    {:mvn/version "0.3.29-1.5.12-SNAPSHOT"}
-             provisdom/math                   {:git/url "https://github.com/Provisdom/math.git"
-                                               :sha     "31fd993e4480fd9b1a2ff447d69110153ce4e91c"}
-             provisdom/utility-belt           {:git/url "https://github.com/Provisdom/utility-belt.git"
-                                               :sha     "30014cb3c7d3fd92cb22f6374ed8ce289c23843c"}
+             provisdom/math           {:git/url "https://github.com/Provisdom/math.git"
+                                       :sha     "31fd993e4480fd9b1a2ff447d69110153ce4e91c"}
+             provisdom/utility-belt   {:git/url "https://github.com/Provisdom/utility-belt.git"
+                                       :sha     "30014cb3c7d3fd92cb22f6374ed8ce289c23843c"}
              uncomplicate/fluokitten  {:mvn/version "0.10.0"}
              uncomplicate/neanderthal {:mvn/version "0.53.2"}}
  ;; We need this for pinned openblas snapshot! If you're just using MKL (recommended on Linux and Windows) you don't need this.
  ;; https://github.com/uncomplicate/neanderthal/blob/d4aeca44482a1350df45c4973e5c173982cf2de2/examples/hello-world/hello-world-apple/project.clj
  :mvn/repos {"sonatype-snapshots" {:url "https://oss.sonatype.org/content/repositories/snapshots"}}
- :aliases   {:dev             {:extra-paths ["siderail"]
-                               ;; We need direct linking for properly resolving types in heavy macros and avoiding reflection warnings!
-                               :jvm-opts    ["-Dclojure.compiler.direct-linking=true"]}
+ :aliases   {:dev             {:extra-paths ["siderail"]}
+             ;; We need direct linking for properly resolving types in heavy macros and avoiding reflection warnings!
+             :direct-linking  {:jvm-opts ["-Dclojure.compiler.direct-linking=true"]}
              :linux           {:extra-deps {org.bytedeco/mkl$linux-x86_64-redist  {:mvn/version "2025.0-1.5.11"}
                                             org.bytedeco/cuda$linux-x86_64-redist {:mvn/version "12.6-9.5-1.5.11"}}}
              :local           {:override-deps {provisdom/math         {:local/root "../math"}
