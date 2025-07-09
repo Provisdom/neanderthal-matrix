@@ -1,5 +1,5 @@
 {:paths     ["src"]
- :deps      {org.bytedeco/openblas    {:mvn/version "0.3.29-1.5.12-SNAPSHOT"}
+ :deps      {org.bytedeco/openblas    {:mvn/version "0.3.30-1.5.12"}
              provisdom/math           {:git/url "https://github.com/Provisdom/math.git"
                                        :sha     "8347258b80d280734faad55db23a78cfdca307d4"}
              provisdom/utility-belt   {:git/url "https://github.com/Provisdom/utility-belt.git"
@@ -13,10 +13,10 @@
              ;; We need direct linking for properly resolving types in heavy macros and avoiding reflection warnings!
              :direct-linking  {:jvm-opts ["-Dclojure.compiler.direct-linking=true"]}
              :linux           {:extra-deps {org.bytedeco/mkl$linux-x86_64-redist  {:mvn/version "2025.0-1.5.11"}
-                                            org.bytedeco/cuda$linux-x86_64-redist {:mvn/version "12.6-9.5-1.5.12"}}}
+                                            org.bytedeco/cuda$linux-x86_64-redist {:mvn/version "12.9-9.10-1.5.12"}}}
              :local           {:override-deps {provisdom/math         {:local/root "../math"}
                                                provisdom/utility-belt {:local/root "../utility-belt"}}}
-             :mac             {:extra-deps {org.bytedeco/openblas {:mvn/version "0.3.29-1.5.12"}}}
+             :mac             {:extra-deps {org.bytedeco/openblas {:mvn/version "0.3.30-1.5.12"}}}
              :test            {:extra-paths ["test" "siderail"]
                                :extra-deps  {com.cognitect/transcriptor {:mvn/version "0.1.5"}
                                              criterium/criterium        {:mvn/version "0.4.6"}
