@@ -1,11 +1,11 @@
 {:paths     ["src"]
  :deps      {org.bytedeco/openblas    {:mvn/version "0.3.29-1.5.12-SNAPSHOT"}
              provisdom/math           {:git/url "https://github.com/Provisdom/math.git"
-                                       :sha     "401e177f3a4d806dffe54379f07ad0a02632eb9a"}
+                                       :sha     "8347258b80d280734faad55db23a78cfdca307d4"}
              provisdom/utility-belt   {:git/url "https://github.com/Provisdom/utility-belt.git"
-                                       :sha     "a85f733d736727c458a6cd7909f8de482883b9fe"}
+                                       :sha     "c7bf8373468bce3aca4d1169a374199834207183"}
              uncomplicate/fluokitten  {:mvn/version "0.10.0"}
-             uncomplicate/neanderthal {:mvn/version "0.53.2"}}
+             uncomplicate/neanderthal {:mvn/version "0.54.1"}}
  ;; We need this for pinned openblas snapshot! If you're just using MKL (recommended on Linux and Windows) you don't need this.
  ;; https://github.com/uncomplicate/neanderthal/blob/d4aeca44482a1350df45c4973e5c173982cf2de2/examples/hello-world/hello-world-apple/project.clj
  :mvn/repos {"sonatype-snapshots" {:url "https://oss.sonatype.org/content/repositories/snapshots"}}
@@ -13,17 +13,17 @@
              ;; We need direct linking for properly resolving types in heavy macros and avoiding reflection warnings!
              :direct-linking  {:jvm-opts ["-Dclojure.compiler.direct-linking=true"]}
              :linux           {:extra-deps {org.bytedeco/mkl$linux-x86_64-redist  {:mvn/version "2025.0-1.5.11"}
-                                            org.bytedeco/cuda$linux-x86_64-redist {:mvn/version "12.6-9.5-1.5.11"}}}
+                                            org.bytedeco/cuda$linux-x86_64-redist {:mvn/version "12.6-9.5-1.5.12"}}}
              :local           {:override-deps {provisdom/math         {:local/root "../math"}
                                                provisdom/utility-belt {:local/root "../utility-belt"}}}
-             :mac             {:extra-deps {org.bytedeco/openblas {:mvn/version "0.3.29-1.5.12-SNAPSHOT"}}}
+             :mac             {:extra-deps {org.bytedeco/openblas {:mvn/version "0.3.29-1.5.12"}}}
              :test            {:extra-paths ["test" "siderail"]
                                :extra-deps  {com.cognitect/transcriptor {:mvn/version "0.1.5"}
                                              criterium/criterium        {:mvn/version "0.4.6"}
                                              org.slf4j/slf4j-nop        {:mvn/version "2.0.17"}
                                              org.clojure/test.check     {:mvn/version "1.1.1"}
                                              provisdom/test             {:git/url "https://github.com/Provisdom/test.git"
-                                                                         :sha     "f62afc093223dff1830a0142bd076ab89cbdef6c"}}}
+                                                                         :sha     "cc19437a48bb368244c2dd0e8d240dacad1e8582"}}}
              :test-clj-runner {:extra-deps {lambdaisland/kaocha           {:mvn/version "1.91.1392"}
                                             lambdaisland/kaocha-junit-xml {:mvn/version "1.17.101"}}
                                :jvm-opts   ["--add-opens=java.base/jdk.internal.ref=ALL-UNNAMED"
