@@ -1,9 +1,9 @@
 {:paths     ["src"]
  :deps      {org.bytedeco/openblas    {:mvn/version "0.3.30-1.5.12"}
              provisdom/math           {:git/url "https://github.com/Provisdom/math.git"
-                                       :sha     "8347258b80d280734faad55db23a78cfdca307d4"}
+                                       :sha     "a86fedf62d4695658f05df8da26066fcc9797d3e"}
              provisdom/utility-belt   {:git/url "https://github.com/Provisdom/utility-belt.git"
-                                       :sha     "c7bf8373468bce3aca4d1169a374199834207183"}
+                                       :sha     "105f0332990f186db8b23e8746c660309a9ce2f0"}
              uncomplicate/fluokitten  {:mvn/version "0.10.0"}
              uncomplicate/neanderthal {:mvn/version "0.54.1"}}
  ;; We need this for pinned openblas snapshot! If you're just using MKL (recommended on Linux and Windows) you don't need this.
@@ -23,7 +23,7 @@
                                              org.slf4j/slf4j-nop        {:mvn/version "2.0.17"}
                                              org.clojure/test.check     {:mvn/version "1.1.1"}
                                              provisdom/test             {:git/url "https://github.com/Provisdom/test.git"
-                                                                         :sha     "8d4fb1a50a23168f2f63f19cb571bdf9ba5ba9c6"}}}
+                                                                         :sha     "c66f08bfbf31d15e97b98c7b8fec0bd890761c8a"}}}
              :test-clj-runner {:extra-deps {lambdaisland/kaocha           {:mvn/version "1.91.1392"}
                                             lambdaisland/kaocha-junit-xml {:mvn/version "1.17.101"}}
                                :jvm-opts   ["--add-opens=java.base/jdk.internal.ref=ALL-UNNAMED"
