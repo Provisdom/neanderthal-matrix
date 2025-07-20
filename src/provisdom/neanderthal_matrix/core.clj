@@ -173,7 +173,7 @@
 
 (defn lls!
   "Linear Least Squares, solving for 'x', where `a` × x = `b`.  After
-  destruction, `a` will contain factorization data, and `b` will contain
+  destruction, `a` will contain factorization data, and `b` will contain the
   solution.  Also returns solution."
   [a b]
   (try (let [cols (columns a)
@@ -204,7 +204,7 @@
 
 (defn lls-with-error
   "Linear Least Squares, solving for 'x', where `a` × x = `b`.  Uses QR Decomp.
-   Returns map of solution, condition-number (of R), projection matrix,
+   Returns map of the solution, condition-number (of R), projection matrix,
    annihilator matrix, mean-squared-errors (maximum likelihood errors), and
    standard-squared-errors (unbiased and larger than MSE).
   See https://en.wikipedia.org/wiki/Ordinary_least_squares."
