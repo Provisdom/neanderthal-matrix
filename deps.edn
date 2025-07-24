@@ -1,11 +1,16 @@
 {:paths     ["src"]
- :deps      {org.bytedeco/openblas    {:mvn/version "0.3.30-1.5.12"}
-             provisdom/math           {:git/url "https://github.com/Provisdom/math.git"
-                                       :sha     "c9a30c654f97743336e72e94dce30baf251cbf05"}
-             provisdom/utility-belt   {:git/url "https://github.com/Provisdom/utility-belt.git"
-                                       :sha     "e33b513aaa3cb27bf8e5f203d610125bc7941d8e"}
-             uncomplicate/fluokitten  {:mvn/version "0.10.0"}
-             uncomplicate/neanderthal {:mvn/version "0.55.0"}}
+ :deps      {org.bytedeco/openblas                   {:mvn/version "0.3.30-1.5.12"}
+             provisdom/math                          {:git/url "https://github.com/Provisdom/math.git"
+                                                      :sha     "c9a30c654f97743336e72e94dce30baf251cbf05"}
+             provisdom/utility-belt                  {:git/url "https://github.com/Provisdom/utility-belt.git"
+                                                      :sha     "e33b513aaa3cb27bf8e5f203d610125bc7941d8e"}
+             uncomplicate/fluokitten                 {:mvn/version "0.10.0"}
+             org.uncomplicate/neanderthal-base       {:mvn/version "0.55.0"}
+             org.uncomplicate/neanderthal-openblas   {:mvn/version "0.55.0"}
+             org.uncomplicate/neanderthal-mkl        {:mvn/version "0.55.0"}
+             org.uncomplicate/neanderthal-opencl     {:mvn/version "0.55.0"}
+             org.uncomplicate/neanderthal-cuda       {:mvn/version "0.55.0"}
+             org.uncomplicate/neanderthal-accelerate {:mvn/version "0.55.0"}}
  ;; We need this for pinned openblas snapshot! If you're just using MKL (recommended on Linux and Windows) you don't need this.
  ;; https://github.com/uncomplicate/neanderthal/blob/d4aeca44482a1350df45c4973e5c173982cf2de2/examples/hello-world/hello-world-apple/project.clj
  :mvn/repos {"sonatype-snapshots" {:url "https://oss.sonatype.org/content/repositories/snapshots"}}
