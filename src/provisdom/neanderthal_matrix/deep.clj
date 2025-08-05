@@ -14,129 +14,226 @@
 (declare)
 
 ;;;REDEFINING
-(def mv*! n-core/mv!)                                       ;; with 2-3 parameters X * y = z
-(def e-max! n-vect-math/fmax!)                              ;; with 2-3 parameters max(x, y) = z
-(def e-*! n-core/scal!)                                     ;; with 2-3 parameters a * x = y
-(def e-axpb! n-vect-math/linear-frac!)                      ;; with 3-4 parameters: a * x + b = y
-(def e-linear-fraction! n-vect-math/linear-frac!)           ;; with 6-7 parameters: (a * x + b) / (c * y + d) = z
-(def e-axpy! n-core/axpy!)
+;;every function is quite overloaded
+(def mv*! n-core/mv!)                                       ;; with 2-5 parameters: aX * y + bz = w
+(def e-*! n-core/scal!)                                     ;; with 2 parameters: a * x = y
 (def e-axpby! n-core/axpby!)
-(def e-tanh! n-vect-math/tanh!)                             ;;Hyperbolic Tangent: f(x) = sinh(x) / cosh(x) = [e^(2x) - 1] /[ e^(2x) + 1].
-(def cross-product! n-core/rk!)                             ;; with 1 or 2 parameters tanh(x) = y
+(def mm*! n-core/mm!)
+(def cross-product! n-core/rk!)                             ;;with 2-4 parameters a[x ✕ y] + B
+
+(def e-axpb! n-vect-math/linear-frac!)                      ;; with 2-4 parameters: a * x + b = y
+(def e-linear-fraction! n-vect-math/linear-frac!)           ;; with 7 parameters: (a * x + b) / (c * y + d) = z
+(def e-axpy! n-core/axpy!)
+
+;;many n-vect-math functions aren't recognized IntelliJ
+(def e-max! n-vect-math/fmax!)                              ;; with 2-3 parameters: max(x, y) = z
+(def e-mul! n-vect-math/mul!)
+(def e-sq! n-vect-math/sqr!)
+(def e-sq n-vectomath/sqr)
+(def e-inv! n-vect-math/inv!)
+(def e-cosh! n-vect-math/cosh!)
+
+;;Hyperbolic Tangent: f(x) = sinh(x) / cosh(x) = [e^(2x) - 1] /[ e^(2x) + 1].
+(def e-tanh! n-vect-math/tanh!)                             ;; with 1 or 2 parameters tanh(x) = y
 
 ;;;ACTIVATION FUNCTIONS
 (defn e-logistic!
   "Logistic: S(x) = e^(x) / [e^(x) + 1] = 0.5 + 0.5 * tanh(0.5 * x)."
-  ([x]
-   (e-axpb! 0.5 (e-tanh! (e-*! 0.5 x)) 0.5))
-  ([x y]
-   (e-axpb! 0.5 (e-tanh! (e-*! 0.5 (n-core/copy! x y))) 0.5)))
+  ([x!]
+   (e-axpb! 0.5 (e-tanh! (e-*! 0.5 x!)) 0.5))
+  ([x y!]
+   (e-axpb! 0.5 (e-tanh! (e-*! 0.5 (n-core/copy! x y!))) 0.5)))
 
 (defn e-logistic-derivative!
   "Logistic Derivative: S'(x) = S(x) * (1 - S(x))."
-  [x]
-  (with-release [x-raw (n-core/raw x)]
-    (let [x (e-logistic! x)]
-      (n-vect-math/mul! (e-axpb! -1.0 x 1.0 x-raw) x))))
+  [x!]
+  (with-release [x-raw (n-core/raw x!)]
+    (let [x! (e-logistic! x!)]
+      (e-mul! (e-axpb! -1.0 x! 1.0 x-raw) x!))))
 
 (defn e-tanh-derivative!
-  "tanh derivative: tanh(x)` = 1 - tanh(x)^2."
-  [x]
-  (with-release [x-raw (n-core/raw x)]
-    (let [x (e-tanh! x)]
-      (e-axpb! -1.0 (n-vect-math/mul! x x-raw) 1.0))))
+  "tanh derivative: tanh(x)` = 1 - tanh(x)^2 = cosh(x)^-2."
+  [x!]
+  (e-sq! (e-inv! (e-cosh! x!))))
 
 (defn e-elu!
   "Exponential Linear Unit: f(x) = max(a * [exp^(x) - 1], x)."
-  [alpha x]
-  (n-vect-math/elu! alpha x))
+  [alpha x!]
+  (n-vect-math/elu! alpha x!))
 
 (defn e-elu-derivative!
   "Exponential Linear Unit Derivative:
   f(x)` = {1 for x >= 0, a * exp^(x) for x <= 0}
         = {1 for x >= 0, f(x) + a for x <= 0}."
-  [alpha x]
+  [alpha x!]
   ;;not obvious how to do this efficiently in Neanderthal
   )
 
 (defn activation-e-elu!
   "Returns the elu function to be used as activation function."
   [alpha]
-  (fn [x]
-    (e-elu! alpha x)))
+  (fn [x!]
+    (e-elu! alpha x!)))
 
 (defn e-relu!
   "Rectified Linear Unit: f(x) = max(0,x-T)."
-  [threshold x]
-  (n-vect-math/relu! threshold x))
+  [threshold x!]
+  (n-vect-math/relu! threshold x!))
 
 (defn e-relu-derivative!
   "Rectified Linear Unit Derivative: f(x)` = {1 for x >= T, 0 for x < T}."
-  [threshold x]
+  [threshold x!]
   ;;not obvious how to do this efficiently
   )
 
 (defn activation-relu!
   "Returns the relu function to be used as activation function."
   [threshold]
-  (fn [x]
-    (e-relu! threshold x)))
+  (fn [x!]
+    (e-relu! threshold x!)))
 
 ;;;OBJECTIVE FUNCTIONS
+(defn mean-squared-error!
+  [diff-mx]
+  (/ (e-sq (n-core/nrm2 diff-mx)) (n-core/dim diff-mx)))
 
+(defn mean-squared-error-derivative!
+  ([diff-mx!]
+   (n-core/scal! (/ 2.0 (n-core/dim diff-mx!)) diff-mx!))
+  ([target-mx output-a!]
+   (let [s (/ 2.0 (n-core/dim target-mx))]
+     (n-core/axpby! (* -1.0 s) target-mx s output-a!))))
 
-
-;;;SANDBOX
-(defn ->inference-layer
-  ""
-  [factory activation-fn in-dim out-dim]
-  (let-release [weights-mx (n-core/ge factory out-dim in-dim)
-                bias-v (n-core/vctr factory out-dim)]
-    {:activation-fn activation-fn
-     :bias-v        bias-v
-     :invoke-fn     (fn [x ones-v a]
-                      (activation-fn
-                        (cross-product! -1.0 bias-v ones-v (n-core/mm! 1.0 weights-mx x 0.0 a))))
-     :weights-mx    weights-mx}))
-
-(defn ->training-layer
-  ""
-  ([inference-layer input-a-1 ones-v]
-   (let [{:keys [activation-fn bias-v weights-mx]} inference-layer]
-     (let-release [weights-mx* (n-core/view-ge weights-mx)  ;;was just "view"
-                   bias-v* (n-core/view-vctr bias-v)
-                   input-a-1* (n-core/view-ge input-a-1)
-                   z (n-core/ge weights-mx (n-core/mrows weights-mx) (n-core/dim ones-v))
-                   output-a (n-core/raw z)
-                   ones-v* (n-core/view-vctr ones-v)]
-       {:activation-fn activation-fn
-        :bias-v        bias-v*
-        :input-a       input-a-1*
-        :forward-fn    (fn []
-                         (activation-fn
-                           (cross-product! -1.0 bias-v* ones-v* (n-core/mm! 1.0 weights-mx* input-a-1* 0.0 z))
-                           output-a))
-        :ones-v        ones-v*
-        :output-a      output-a
-        :weights-mx    weights-mx*})))
-  ([inference-layer previous-training-layer]
-   (->training-layer inference-layer
-     (:output-a previous-training-layer)
-     (:ones-v previous-training-layer))))
-
+;;;NEURAL NETWORK
 (defn this-particular-network
   ""
   [factory]
-  (with-release [x (n-core/ge factory 2 2 [0.3 0.9 0.3 0.9])
-                 ones-v (n-core/vctr factory 1 1)
-                 layer-1 (->inference-layer factory e-tanh! 2 4)
-                 layer-2 (->inference-layer factory e-logistic! 4 1)
-                 training-layer-1 (->training-layer layer-1 x ones-v)
-                 training-layer-2 (->training-layer layer-2 training-layer-1)]
-    (n-core/transfer! [0.3 0.1 0.9 0.0 0.6 2.0 3.7 1.0] (:weights-mx layer-1))
-    (n-core/transfer! [0.7 0.2 1.1 2.0] (:bias-v layer-1))
-    (n-core/transfer! [0.75 0.15 0.22 0.33] (:weights-mx layer-2))
-    (n-core/transfer! [0.3] (:bias-v layer-2))
-    ((:forward-fn training-layer-1))
-    ((:forward-fn training-layer-2))
-    (n-core/transfer (:output-a training-layer-2))))
+  (let [eta 0.05]
+    (with-release [x (n-core/ge factory 2 2 [0.3 0.9 0.3 0.9])
+                   ones-v (n-core/vctr factory 1 1)         ;2 dim -- can get this from x-dim
+                   layer-1 (->inference-layer factory e-tanh-derivative! e-tanh! 2 4)
+                   layer-2 (->inference-layer factory e-logistic-derivative! e-logistic! 4 1)
+                   training-layer-1 (->training-layer layer-1 x ones-v)
+                   training-layer-2 (->training-layer layer-2 training-layer-1)]
+      (n-core/transfer! [0.3 0.1 0.9 0.0 0.6 2.0 3.7 1.0] (:weights-mx layer-1))
+      (n-core/transfer! [0.7 0.2 1.1 2.0] (:bias-v layer-1))
+      (n-core/transfer! [0.75 0.15 0.22 0.33] (:weights-mx layer-2))
+      (n-core/transfer! [0.3] (:bias-v layer-2))
+      ((:forward-fn! training-layer-1))
+      ((:forward-fn! training-layer-2))
+      ((:backward-fn! training-layer-2) eta)
+      ((:backward-fn! training-layer-1) eta)
+      (n-core/transfer (:output-a training-layer-2)))))
+
+;;input-data is in,data
+;;W is out,in (weights-mx)
+;;B is out (bias-v)
+;;weighted-output is out,data (W*X+B)
+;;output-a is out,data f(weighted-output)
+;;input-a is in,data
+;;temp-w-mx is out,in (used for temp storage)
+
+(defn feedforward
+  ""
+  [activation-fn! weights-mx bias-v ones-v input-a weighted-output! output-a!]
+  ;put W*X into weighted-output! (0.0 means add zero of weighted-output!)
+  (n-core/mm! 1.0 weights-mx input-a 0.0 weighted-output!)
+  ;put W*X-B into weighted-output!
+  (cross-product! -1.0 bias-v ones-v weighted-output!)
+  ;put f(W*X-B) into output-a!
+  (activation-fn! weighted-output! output-a!))
+
+(defn backpropagate
+  "Only re-use values from weights-mx!, bias-v!, and input-a! out of this function.
+  The remainder of the changed outputs are just memory allocations."
+  [activation-derivative-fn! eta-learning-parameter input-a! output-a ones-v weighted-output! temp-w-mx! weights-mx! bias-v!]
+  (let [eta-avg (- (/ (double eta-learning-parameter) (n-core/dim ones-v)))]
+    ;;put f`(old-z) into weighted-output!
+    (activation-derivative-fn! weighted-output!)
+    ;;put f`(old-z) ⨷ ([W]^T * next-d) into weighted-output! => output-error d
+    (e-mul! weighted-output! output-a)
+    ;;put -e/n * d * [input-a-1]^T into temp-w-mx!
+    (n-core/mm! eta-avg weighted-output! (n-core/trans input-a!) 0.0 temp-w-mx!)
+    ;;put [W]^T * d into input-a! => weighted output error
+    (n-core/mm! 1.0 (n-core/trans weights-mx!) weighted-output! 0.0 input-a!)
+    ;;put -e/n * SUMi[d] + old-b into b! => new b
+    (n-core/mv! eta-avg weighted-output! ones-v 1.0 bias-v!)
+    ;;put -e/n * d * [input-a-1]^T + W-old into W! => new W
+    (e-axpy! 1.0 temp-w-mx! weights-mx!)))
+
+(s/def ::network-layer
+  (s/keys :req [::dim ::activation-derivative-fn ::activation-fn]))
+
+(s/def ::network-layers
+  (s/coll-of ::network-layer))                              ;;TODO: turn into vector with min-count
+
+(s/def ::connected-network-layer                            ;;out-dim is mrows for weights-mx
+  (s/with-gen
+    (s/and (s/merge ::network-layer
+             (s/keys :req [::bias-v ::weights-mx]))
+      (fn [{::keys [bias-v dim weights-mx]}]
+        (= (n-core/mrows weights-mx) (n-core/dim bias-v) dim)))
+    #(gen/generate (s/gen ::connected-network-layer))))     ;;;TODO: write generator
+
+(s/def ::batch-connected-network-layer
+  (s/with-gen
+    (s/and (s/merge ::connected-network-layer
+             (s/keys :req [::output-a ::weighted-output]))
+      (fn []))
+    #()))
+
+(s/def ::connected-network-layers
+  (s/coll-of ::network-layer))                              ;;TODO: turn into vector with min-count
+;;;TODO: ensure that all in-dim (ncols) for weights-mx matches dim for previous layer
+
+(defn ->neural-network
+  ""
+  [input-dim network-layers factory]
+  (let [conn-layers (reduce
+                      (fn [acc {::keys [dim] :as network-layer}]
+                        (let [in-dim (or (::dim (last acc)) input-dim)]
+                          (conj acc (merge network-layer
+                                      ::bias-v (n-core/vctr factory dim)
+                                      ::weights-mx (n-core/ge factory dim in-dim)))))
+                      []
+                      network-layers)]
+
+    ))
+
+(defn ->ones-v
+  ""
+  [input-data]
+  (with-release [ones-v (n-core/entry! (n-core/vctr input-data (n-core/ncols input-data)) 1.0)]
+    ones-v))
+
+(defn ->weighted-output
+  ""
+  [ones-v weights-mx]
+  (with-release [weighted-output (n-core/ge weights-mx
+                                   (n-core/mrows weights-mx)
+                                   (n-core/dim ones-v))]
+    weighted-output))
+
+(defn run-neural-network-epoch
+  ""
+  ([eta-learning-parameter obj-fn neural-network x]
+   (run-neural-network-epoch eta-learning-parameter obj-fn neural-network x (->ones-v x)))
+  ([eta-learning-parameter obj-fn neural-network x ones-v]
+   ;;ensure x and ones-v sizes match with spec
+
+   ;;as it's built forward, create the '::batch-connected-network-layers'
+   ;; as it goes backward, create and use a `::temp-w-mx` or two.
+   ;;  then convert the batch-connected... back into connected-network-layers as we go (releasing memory)
+   ;;;TODO: may need to handle cases of:
+   ;;; (1) one layer -- probably no need for extra memory
+   ;;; (2) two layers -- need one temp object
+   ;;; (3) 3+ layers -- need two temp objects (alternating)
+
+   ))
+
+;;;TODO: (1) Don’t need to update input-a if the first layer; need desired-output
+;;; (2) Bayadera for GPU random numbers (see 13)
+;;; (3) Don’t build layers by just adding to maps —
+;;;        need to use let-release, and use with-release around it
+;;;        (constructor can take the more narrow version — and have a function
+;;;        that returns the more narrow version
