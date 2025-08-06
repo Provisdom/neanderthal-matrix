@@ -134,7 +134,7 @@
 ;;temp-w-mx is out,in (used for temp storage)
 
 (defn feedforward
-  ""
+  "Docstring"
   [activation-fn! weights-mx bias-v ones-v input-a weighted-output! output-a!]
   ;put W*X into weighted-output! (0.0 means add zero of weighted-output!)
   (n-core/mm! 1.0 weights-mx input-a 0.0 weighted-output!)
@@ -175,6 +175,10 @@
         (= (n-core/mrows weights-mx) (n-core/dim bias-v) dim)))
     #(gen/generate (s/gen ::connected-network-layer))))     ;;;TODO: write generator
 
+(s/def ::neural-network
+  (s/coll-of ::connected-network-layer))                    ;;TODO: turn into vector with min-count
+;;;TODO: ensure that all in-dim (ncols) for weights-mx matches dim for previous layer
+
 (s/def ::batch-connected-network-layer
   (s/with-gen
     (s/and (s/merge ::connected-network-layer
@@ -182,32 +186,45 @@
       (fn []))
     #()))
 
-(s/def ::connected-network-layers
-  (s/coll-of ::network-layer))                              ;;TODO: turn into vector with min-count
-;;;TODO: ensure that all in-dim (ncols) for weights-mx matches dim for previous layer
+(defn ->connected-network-layer
+  "Docstring"
+  [factory in-dim network-layer]
+  (let [{::keys [dim]} network-layer]
+    (with-release [bias-v (n-core/vctr factory dim)
+                   weights-mx (n-core/ge factory dim in-dim)]
+      (assoc network-layer
+        ::bias-v bias-v
+        ::weights-mx weights-mx))))
 
 (defn ->neural-network
-  ""
-  [input-dim network-layers factory]
-  (let [conn-layers (reduce
-                      (fn [acc {::keys [dim] :as network-layer}]
-                        (let [in-dim (or (::dim (last acc)) input-dim)]
-                          (conj acc (merge network-layer
-                                      ::bias-v (n-core/vctr factory dim)
-                                      ::weights-mx (n-core/ge factory dim in-dim)))))
-                      []
-                      network-layers)]
+  "Docstring"
+  [factory input-dim network-layers]
+  (reduce
+    (fn [acc network-layer]
+      (let [in-dim (or (::dim (last acc)) input-dim)]
+        (conj acc (->connected-network-layer factory in-dim network-layer))))
+    []
+    network-layers))
 
-    ))
+(defn ->batch-connected-network-layer
+  "Docstring"
+  [connected-network-layer data-dim]
+  (let [{::keys [weights-mx]} connected-network-layer
+        out-dim (n-core/mrows weights-mx)]
+    (with-release [output-a (n-core/ge weights-mx out-dim data-dim)
+                   weighted-output (n-core/ge weights-mx out-dim data-dim)]
+      (assoc connected-network-layer
+        ::output-a output-a
+        ::weighted-output weighted-output))))
 
 (defn ->ones-v
-  ""
+  "Docstring"
   [input-data]
   (with-release [ones-v (n-core/entry! (n-core/vctr input-data (n-core/ncols input-data)) 1.0)]
     ones-v))
 
 (defn ->weighted-output
-  ""
+  "Docstring"
   [ones-v weights-mx]
   (with-release [weighted-output (n-core/ge weights-mx
                                    (n-core/mrows weights-mx)
@@ -215,21 +232,28 @@
     weighted-output))
 
 (defn run-neural-network-epoch
-  ""
-  ([eta-learning-parameter obj-fn neural-network x]
-   (run-neural-network-epoch eta-learning-parameter obj-fn neural-network x (->ones-v x)))
-  ([eta-learning-parameter obj-fn neural-network x ones-v]
+  "Docstring"
+  ([eta-learning-parameter obj-fn neural-network input-data]
+   (run-neural-network-epoch eta-learning-parameter obj-fn neural-network input-data (->ones-v input-data)))
+  ([eta-learning-parameter obj-fn neural-network input-data ones-v]
    ;;ensure x and ones-v sizes match with spec
+   (let [data-dim (n-core/ncols input-data)
+         batch-neural-network (mapv #(->batch-connected-network-layer % data-dim)
+                                neural-network)
+         forward-nn (reduce (fn [acc batch-connected-network-layer]
 
-   ;;as it's built forward, create the '::batch-connected-network-layers'
-   ;; as it goes backward, create and use a `::temp-w-mx` or two.
-   ;;  then convert the batch-connected... back into connected-network-layers as we go (releasing memory)
-   ;;;TODO: may need to handle cases of:
-   ;;; (1) one layer -- probably no need for extra memory
-   ;;; (2) two layers -- need one temp object
-   ;;; (3) 3+ layers -- need two temp objects (alternating)
+                   ))
+         (feedforward activation-fn! weights-mx bias-v ones-v input-a weighted-output! output-a!)
+         ]
 
-   ))
+     ;;as it's built forward, create the '::batch-connected-network-layers'
+     ;; as it goes backward, create and use a `::temp-w-mx` or two.
+     ;;  then convert the batch-connected... back into connected-network-layers as we go (releasing memory)
+     ;;;TODO: may need to handle cases of:
+     ;;; (1) one layer -- probably no need for extra memory
+     ;;; (2) two layers -- need one temp object
+     ;;; (3) 3+ layers -- need two temp objects (alternating)
+     )))
 
 ;;;TODO: (1) Don’t need to update input-a if the first layer; need desired-output
 ;;; (2) Bayadera for GPU random numbers (see 13)
