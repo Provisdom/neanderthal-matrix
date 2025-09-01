@@ -3,7 +3,7 @@
              provisdom/math                          {:git/url "https://github.com/Provisdom/math.git"
                                                       :sha     "c9a30c654f97743336e72e94dce30baf251cbf05"}
              provisdom/utility-belt                  {:git/url "https://github.com/Provisdom/utility-belt.git"
-                                                      :sha     "e33b513aaa3cb27bf8e5f203d610125bc7941d8e"}
+                                                      :sha     "f9048cc47753bffe8c44746e718d1c3671ce35bb"}
              uncomplicate/fluokitten                 {:mvn/version "0.10.0"}
              org.uncomplicate/neanderthal-base       {:mvn/version "0.55.1"}
              org.uncomplicate/neanderthal-openblas   {:mvn/version "0.55.0"}
@@ -28,7 +28,7 @@
                                              org.slf4j/slf4j-nop        {:mvn/version "2.0.17"}
                                              org.clojure/test.check     {:mvn/version "1.1.1"}
                                              provisdom/test             {:git/url "https://github.com/Provisdom/test.git"
-                                                                         :sha     "1ed18a97f091798fde2ddeefe2a0ecc0c132590d"}}}
+                                                                         :sha     "d7edfe4af69374c6864da2d2219f8dfcbba454c9"}}}
              :test-clj-runner {:extra-deps {lambdaisland/kaocha           {:mvn/version "1.91.1392"}
                                             lambdaisland/kaocha-junit-xml {:mvn/version "1.17.101"}}
                                :jvm-opts   ["--add-opens=java.base/jdk.internal.ref=ALL-UNNAMED"
